@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Escapism Home</title>
+  <meta name="description" content="A sleek, animated one‑page website with top navigation (Home, About, Contact), hero video, gallery, pricing, FAQ, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> -->
+  
+  <!-- <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2728.svg" /> -->
+  <link rel="icon" href="images/escapism.png">
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            brand: {
+50:  '#f6f3ff',  // Soft lavender-white
+100: '#efe5ff',  // Light pastel violet
+200: '#e0ccff',  // Soft lilac
+300: '#c7a6fc',  // Medium-light violet
+400: '#ad7cf9',  // Vibrant violet
+500: '#954ef6',  // Main violet-purple mix
+600: '#822eea',  // Bold purple
+700: '#6f22ce',  // Deep violet purple
+800: '#5919a8',  // Very deep purple
+900: '#441187'   // Darkest purple-violet
+
+
+            }
+          },
+          boxShadow: {
+            glow: '0 0 0 8px rgb(59 130 246 / 0.15)'
+          }
+        }
+      },
+      darkMode: 'class'
+    }
+  </script>
+
+  <!-- GSAP + ScrollTrigger for animations -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Lottie Web Component (optional delight) -->
+  <script defer src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    /* Smooth underline hover */
+    .link-underline { position: relative; }
+    .link-underline::after {
+      content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: currentColor; transition: width .25s ease;
+    }
+    .link-underline:hover::after { width: 100%; }
+
+    /* Fancy gradient ring for cards */
+    .gradient-ring {
+      background: radial-gradient(1200px 1200px at 100% 0%, rgba(59,130,246,.08), rgba(59,130,246,0));
+    }
+
+    /* Backdrop blur helpers for hero */
+    .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    /* Simple keyframe float */
+    @keyframes floaty {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+
+    
+  </style>
+</head>
+<body  class="bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-50">
+  
+  <!-- ================= NAVBAR ================= -->
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mt-4 flex items-center justify-between rounded-2xl border border-gray-200 bg-white/80 p-2 shadow-md backdrop-blur dark:border-gray-800 dark:bg-gray-900/70">
+        <a href="#home" class="flex items-center gap-3 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-600 p-[2px]">
+            <div class="h-full w-full rounded-[10px] bg-white dark:bg-gray-950 grid place-items-center">
+              <span class="text-xl font-extrabold text-brand-600">🎮</span>
+            </div>
+          </div>
+          <span class="text-lg font-bold tracking-tight">ESCAPISM</span>
+        </a>
+
+        <div class="hidden items-center gap-1 md:flex">
+          <a href="#home" class="link-underline rounded-xl px-3 py-2 text-sm font-medium hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500">Home</a>
+          <a href="#about" class="link-underline rounded-xl px-3 py-2 text-sm font-medium hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500">About</a>
+          <a href="#services" class="link-underline rounded-xl px-3 py-2 text-sm font-medium hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500">Services</a>
+          <a href="#gallery" class="link-underline rounded-xl px-3 py-2 text-sm font-medium hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500">Gallery</a>
+          <a href="#booking" class="link-underline rounded-xl px-3 py-2 text-sm font-medium hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500">Booking</a>
+          <a href="#faq" class="link-underline rounded-xl px-3 py-2 text-sm font-medium hover:text-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500">FAQ</a>
+          <a href="#contact" class="ml-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="themeToggle" aria-label="Toggle Dark Mode" class="rounded-xl border border-gray-200 p-2 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-gray-800 dark:hover:bg-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+              <path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/>
+            </svg>
+          </button>
+          <button id="menuBtn" class="inline-flex items-center justify-center rounded-xl border border-gray-200 p-2 md:hidden hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-gray-800 dark:hover:bg-gray-800" aria-expanded="false" aria-controls="mobileMenu">
+            <span class="sr-only">Open Menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobileMenu" class="pointer-events-none fixed inset-x-0 top-20 z-40 mx-4 origin-top scale-95 opacity-0 transition-all md:hidden">
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-900">
+          <div class="grid gap-2">
+            <a href="#home" class="rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800">Home</a>
+            <a href="#about" class="rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800">About</a>
+            <a href="#services" class="rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800">Services</a>
+            <a href="#gallery" class="rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800">Gallery</a>
+            <a href="#pricing" class="rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800">Booking</a>
+            <a href="#faq" class="rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800">FAQ</a>
+            <a href="#contact" class="rounded-xl bg-brand-600 px-3 py-2 font-medium text-white hover:bg-brand-700">Contact</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!-- ================= HERO ================= -->
+  <section id="home" class="relative isolate pt-32 sm:pt-36">
+    <div class="absolute inset-0 -z-10 overflow-hidden rounded-b-[2.5rem]">
+      <video class="h-full w-full object-cover" src="images/3946073-uhd_4096_2160_25fps.mp4" autoplay muted  playsinline></video>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-white/80 dark:to-gray-950/80"></div>
+    </div>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-10 py-16 sm:py-24 lg:grid-cols-12 lg:items-center lg:gap-16">
+        <div class="lg:col-span-7 text-white">
+          <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
+            <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span>
+            Now Live — ESCAPISM v1.0
+          </div>
+          <h1 class="mt-5 text-4xl font-extrabold tracking-tight sm:text-6xl">Discover, Book, and Play at the Best Gaming Centers. <br>Now in Hyderabad</h1>
+          
+          <p class="mt-5 max-w-2xl text-lg/relaxed text-white/90">Find, book, and play at the best gaming centers—PC, console, and VR—anytime, anywhere.</p>
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <a href="#about" class="rounded-2xl bg-white px-5 py-3 font-semibold text-gray-900 shadow hover:shadow-lg">Explore Features</a>
+            <a href="#contact" class="rounded-2xl bg-black/20 px-5 py-3 font-semibold text-white ring-1 ring-white/30 hover:bg-black/30">Get in Touch</a>
+             <a href="#booking" class="rounded-2xl bg-white px-5 py-3 font-semibold text-gray-900 shadow hover:shadow-lg">Book your Slot</a>
+          </div>
+
+
+  <!-- <div style="a" class="w-1/2 flex justify-center"> 
+    <img style="border-radius: 40%; " src="images/escapism.png" alt="Gaming Setup" class="w-96 animate-bounce-slow">
+  </div> -->
+
+          <div class="mt-10 flex items-center gap-6 text-sm text-white/90">
+            <div class="flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span> PlayStation</div>
+            <div class="flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-sky-400"></span> XBOX</div>
+            <div class="flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-violet-400"></span> PC</div>
+          </div>
+        </div>
+
+       <!-- <div class="lg:col-span-5"> 
+          <div class="glass rounded-3xl border border-white/20 bg-white/10 p-6 shadow-xl">
+            <div class="rounded-2xl bg-white p-4 dark:bg-gray-900">
+              <lottie-player src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwallpapers.com%2F4k-ultra-hd-gaming&psig=AOvVaw1qH5zaXgTG8fc6gv_yz1zD&ust=1755489068665000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCPjvoeL4kI8DFQAAAAAdAAAAABAE" background="transparent" speed="1" loop autoplay style="width:100%;height:280px"></lottie-player>
+              <div class="mt-4 grid grid-cols-3 gap-2">
+                <img src="images/escapism.png" alt="Team" class="h-20 w-full rounded-xl object-cover"/>
+                <img src="images/escapism.png" alt="Workspace" class="h-20 w-full rounded-xl object-cover"/>
+                <img src="images/escapism.png" alt="UI" class="h-20 w-full rounded-xl object-cover"/> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="relative py-20 sm:py-28">
+    <div class="absolute inset-0 gradient-ring"></div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold sm:text-4xl">About Escapism</h2>
+        <p class="mt-3 text-lg text-gray-600 dark:text-gray-300" style="font-family: Bricolage Grotesque;">Our platform makes booking gaming centers quick, simple, and hassle-free. From high-end PCs to VR arenas, we connect gamers with the best spaces near them.
+</p>
+      </div>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center gap-3">
+            <!-- <div class="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">⚡</div> -->
+             ⚡
+            <h3 class="text-lg font-semibold">Instant Booking</h3>
+          </div>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">Reserve your gaming slot in just a few clicks.</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center gap-3">
+            <!-- <div class="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">📆</div> -->
+             📆
+            <h3 class="text-lg font-semibold">Flexible Scheduling</h3>
+          </div>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">Choose time slots that fit your schedule.</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center gap-3">
+            <!-- <div class="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">🎮</div> -->
+             🎮
+            <h3 class="text-lg font-semibold">Nearby Centers</h3>
+          </div>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">Find gaming arenas closest to your location.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section id="services" class="py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-10 flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-3xl font-bold sm:text-4xl">What We Do</h2>
+          <p class="mt-2 text-gray-600 dark:text-gray-300">We simplify the way gamers discover and book gaming centers.,<br> Our platform brings together the best PC, console, and VR arenas <br> in one place, making it easy to find, compare, and reserve your gaming slot</p>
+        </div>
+        <a href="#contact" class="hidden rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800 sm:block">Request a Quote</a>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Card -->
+        <article class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold">Centers</h3>
+            <span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">New</span>
+          </div>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">🎮 Book gaming centers instantly for solo or group play.</p>
+          <div class="mt-4 h-36 overflow-hidden rounded-xl">
+            <img class="h-full w-full object-cover transition duration-500 group-hover:scale-105" src="https://wallpaperbat.com/img/9768737-pc-gaming-setup-wallpaper.jpg" alt="Web app"/>
+          </div>
+        </article>
+
+        <article class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold">Utilities</h3>
+            <span class="rounded-full bg-sky-100 px-2 py-1 text-xs font-medium text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">Popular</span>
+          </div>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">🖥️ Explore high-performance PCs, consoles, and VR setups</p>
+          <div class="mt-4 h-36 overflow-hidden rounded-xl">
+            <img class="h-full w-full object-cover transition duration-500 group-hover:scale-105" src="https://images4.alphacoders.com/111/1113741.jpg" alt="UI Design"/>
+          </div>
+        </article>
+
+        <article class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold">Planning</h3>
+            <span class="rounded-full bg-violet-100 px-2 py-1 text-xs font-medium text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">Pro</span>
+          </div>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">📅 Plan esports tournaments and private events</p>
+          <div class="mt-4 h-36 overflow-hidden rounded-xl">
+            <img class="h-full w-full object-cover transition duration-500 group-hover:scale-105" src="https://t4.ftcdn.net/jpg/02/89/78/17/360_F_289781730_0OJWSY2pS9Q69KT4g2pr5liE8dmW9CL0.jpg" alt="Automation"/>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GALLERY (images + video) ================= -->
+  <section id="gallery" class="py-20 sm:py-28 bg-gray-50 dark:bg-gray-900/30">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold sm:text-4xl">Games</h2>
+        <p class="mt-3 text-gray-600 dark:text-gray-300">Many more games to play!</p>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <img class="h-64 w-full rounded-2xl object-cover shadow-sm" src="https://4kwallpapers.com/images/wallpapers/need-for-speed-police-cars-racing-cars-3840x2160-2723.jpg" alt="Gallery 1"/>
+        <img class="h-64 w-full rounded-2xl object-cover shadow-sm" src="https://cdn.wallpapersafari.com/80/0/QloNVy.jpg" alt="Gallery 2"/>
+        <img class="h-64 w-full rounded-2xl object-cover shadow-sm" src="https://cdn.wallpapersafari.com/92/89/S1KxLt.jpg" alt="Gallery 3"/>
+        <img class="h-64 w-full rounded-2xl object-cover shadow-sm" src="https://wallpapers.com/images/hd/4k-ultra-hd-gaming-call-of-duty-mobile-dkl7a8l4xxzpoaqu.jpg" alt="Gallery 4"/>
+        <img class="h-64 w-full rounded-2xl object-cover shadow-sm" src="https://images.wallpapersden.com/image/download/playerunknown-s-battlegrounds-4k-gaming-poster_bWlqZ2mUmZqaraWkpJRobWllrWdma2U.jpg" alt="Gallery 5"/>
+        <img class="h-64 w-full rounded-2xl object-cover shadow-sm" src="https://wallpapercat.com/w/full/6/0/4/114059-3840x2160-desktop-4k-god-of-war-background-photo.jpg" alt="Gallery 6"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TESTIMONIALS ================= -->
+  <section class="py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold sm:text-4xl">- Reviews -</h2>
+<!--        <p class="mt-3 text-gray-600 dark:text-gray-300">Social proof to make managers smile.</p> -->
+      </div>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        <figure class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <blockquote class="text-gray-700 dark:text-gray-200">“Escapism is the best!”</blockquote>
+          <figcaption class="mt-4 flex items-center gap-3">
+            <div>
+              <div class="font-semibold">User</div>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <blockquote class="text-gray-700 dark:text-gray-200">“It's the best site to book slots”</blockquote>
+          <figcaption class="mt-4 flex items-center gap-3">
+            <div>
+              <div class="font-semibold">User</div>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <blockquote class="text-gray-700 dark:text-gray-200">“I can play whenever I want!!!”</blockquote>
+          <figcaption class="mt-4 flex items-center gap-3">
+            <div>
+              <div class="font-semibold">User</div>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Booking ================= -->
+  <section  id="booking" class="py-20 sm:py-28 bg-gray-50 dark:bg-gray-900/30">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold sm:text-4xl">Slot Booking</h2>
+        <p class="mt-3 text-gray-600 dark:text-gray-300">Book your gaming slots instantly and never miss a chance to play.</p>
+      </div>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        <!-- Free -->
+         <!--
+        <div class="relative rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <h3 class="text-lg font-semibold">Starter</h3>
+          <p class="mt-1 text-sm text-gray-500">For quick demos</p>
+          <div class="mt-6 text-4xl font-extrabold">₹0<span class="text-base font-medium text-gray-500">/mo</span></div>
+          <ul class="mt-6 space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <li>✔ Single page</li>
+            <li>✔ Basic animations</li>
+            <li>✔ Email support</li>
+          </ul>
+          <a href="#contact" class="mt-6 inline-block w-full rounded-xl bg-gray-900 px-4 py-2 text-center font-semibold text-white hover:bg-black dark:bg-white dark:text-gray-900">Choose</a>
+        </div>
+    -->
+        <!-- Pro -->
+    
+        <div class="relative rounded-3xl border-2 border-brand-600 bg-white p-6 shadow-lg dark:border-brand-600 dark:bg-gray-900">
+          <div class="absolute -top-3 right-6 rounded-full bg-brand-600 px-3 py-1 text-xs font-semibold text-white shadow">Here</div>
+          <!-- <h3 class="text-lg font-semibold">Pro</h3> -->
+          <p class="mt-1 text-sm text-gray-500">For Gamers</p>
+          <div class="mt-6 text-4xl font-extrabold">Book Your Slot Now!</div>
+          <ul class="mt-6 space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <li>Get your slot instantly</li>
+          </ul>
+
+          <a href="loggin.html" class="mt-6 inline-block w-full rounded-xl bg-brand-600 px-4 py-2 text-center font-semibold text-white hover:bg-brand-700">Book</a>
+        </div>
+  <script>
+    document.querySelectorAll('.transition-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault(); 
+        document.body.classList.add('fade-out'); 
+        
+        setTimeout(() => {
+          window.location = this.href; 
+        }, 600); // match CSS transition duration
+      });
+    });
+  </script>
+        
+        <!-- Enterprise -->
+         <!--
+        <div class="relative rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <h3 class="text-lg font-semibold">Enterprise</h3>
+          <p class="mt-1 text-sm text-gray-500">For org‑wide rollouts</p>
+          <div class="mt-6 text-4xl font-extrabold">Custom</div>
+          <ul class="mt-6 space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <li>✔ Dedicated SSO</li>
+            <li>✔ SLAs & security reviews</li>
+            <li>✔ On‑site workshops</li>
+          </ul> 
+          <a href="#contact" class="mt-6 inline-block w-full rounded-xl bg-gray-900 px-4 py-2 text-center font-semibold text-white hover:bg-black dark:bg-white dark:text-gray-900">Contact Sales</a>
+        -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" class="py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold sm:text-4xl">FAQ</h2>
+        <p class="mt-3 text-gray-600 dark:text-gray-300">Answers to common questions.</p>
+      </div>
+
+      <div class="mx-auto mt-8 max-w-3xl divide-y divide-gray-200 rounded-2xl border border-gray-200 bg-white dark:divide-gray-800 dark:border-gray-800 dark:bg-gray-900">
+        <details class="group p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between font-medium">How do I book a gaming slot?
+            <span class="transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">Simply choose your preferred gaming center, select the date and time, pick your setup (PC, console, or VR), and confirm your booking in a few clicks.</p>
+        </details>
+        <details class="group p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between font-medium">Can I cancel or reschedule my booking?
+            <span class="transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">Yes, bookings can be modified or canceled before the slot time. Cancellation and rescheduling policies depend on the gaming center.</p>
+        </details>
+        <details class="group p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between font-medium">Do I need to pay online, or can I pay at the center?
+            <span class="transition group-open:rotate-180">⌄</span>
+          </summary>
+          <p class="mt-3 text-gray-600 dark:text-gray-300">You can pay securely online through our platform or directly at the gaming center, depending on the venue’s options.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact" class="py-20 sm:py-28 bg-gray-50 dark:bg-gray-900/30">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid items-start gap-10 md:grid-cols-2">
+        <div>
+          <h2 class="text-3xl font-bold sm:text-4xl">Contact Us</h2>
+          <div class="mt-8 grid gap-4">
+            <div class="flex items-center gap-3">
+              <div class="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600">📍</div>
+              <div>
+                <div class="font-semibold">Hyderabad</div>
+                <div class="text-sm text-gray-500">India</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600">📩</div>
+              <div>
+                <div class="font-semibold">escapism@gmail.com</div>
+                <div class="text-sm text-gray-500">We reply within 1 business day</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600">⏱️</div>
+              <div>
+                <div class="font-semibold">Mon – Fri</div>
+                <div class="text-sm text-gray-500">9:00AM – 6:00PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form id="contactForm" class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <div class="grid gap-4">
+            <!-- <div> 
+              <label class="mb-1 block text-sm font-medium">Name</label>
+              <input required type="text" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-950" placeholder="Your name"/>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Email</label>
+              <input required type="email" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-950" placeholder="you@example.com"/>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Message</label>
+              <textarea required rows="4" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-950" placeholder="Tell us about your project..."></textarea>
+            </div>
+            -->
+            <p>~ Got questions or booking requests? <br>~ Hit the button and drop us a mail</p>
+<a href="mailto:vineethvarma2345@gmail.com?subject=Booking%20Inquiry&body=Hello,%20I%20want%20to%20book%20a%20slot." 
+   class="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2 font-semibold text-white hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500">
+  <span>Send Message</span>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+    <path d="M5 12h14"/>
+    <path d="m12 5 7 7-7 7"/>
+  </svg>
+</a>
+
+            <p id="formStatus" class="hidden rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Thanks! We'll get back to you soon.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-gray-200 bg-white py-10 text-sm dark:border-gray-800 dark:bg-gray-950">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+        <div class="flex items-center gap-2">
+        
+          <span class="font-semibold">Escapism ©</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="#privacy" class="hover:underline">Privacy</a>
+          <a href="#terms" class="hover:underline">Terms</a>
+          <a href="#contact" class="hover:underline">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+
+
+
+
+
+
+
+
+  <!-- ================= SCRIPTS ================= -->
+  <script>
+    // Dark mode toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.classList.add('dark');
+    }
+    themeToggle.addEventListener('click', () => {
+      root.classList.toggle('dark');
+      localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', String(!expanded));
+      mobileMenu.classList.toggle('pointer-events-none');
+      mobileMenu.classList.toggle('opacity-0');
+      mobileMenu.classList.toggle('scale-95');
+    });
+
+    // Simple form handler (demo)
+    const form = document.getElementById('contactForm');
+    const statusEl = document.getElementById('formStatus');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      statusEl.classList.remove('hidden');
+      statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      form.reset();
+    });
+
+    // Set year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // GSAP animations
+    window.addEventListener('load', () => {
+      if (window.gsap) {
+        gsap.registerPlugin(ScrollTrigger);
+        // Hero text
+        gsap.from('#home h1', { y: 30, opacity: 0, duration: 0.9, ease: 'power2.out' });
+        gsap.from('#home p', { y: 20, opacity: 0, duration: 0.8, delay: 0.1, ease: 'power2.out' });
+        gsap.from('#home .mt-6', { y: 10, opacity: 0, duration: 0.8, delay: 0.2, ease: 'power2.out' });
+
+        // Section reveals
+        document.querySelectorAll('section[id] h2').forEach((el) => {
+          gsap.from(el, {
+            scrollTrigger: { trigger: el, start: 'top 80%' },
+            y: 20, opacity: 0, duration: 0.6, ease: 'power2.out'
+          });
+        });
+        // Cards stagger
+        document.querySelectorAll('#services article').forEach((card, i) => {
+          gsap.from(card, {
+            scrollTrigger: { trigger: card, start: 'top 85%' },
+            y: 30, opacity: 0, duration: 0.5, delay: i * 0.05, ease: 'power2.out'
+          });
+        });
+        // Gallery tiles
+        document.querySelectorAll('#gallery img, #gallery video').forEach((tile, i) => {
+          gsap.from(tile, {
+            scrollTrigger: { trigger: tile, start: 'top 90%' },
+            scale: 0.96, opacity: 0, duration: 0.5, delay: i * 0.03, ease: 'power2.out'
+          });
+        });
+        // Pricing bump
+        gsap.from('#pricing .grid > div', {
+          scrollTrigger: { trigger: '#pricing .grid', start: 'top 80%' },
+          y: 24, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out'
+        });
+      }
+    });
+  </script>
+</body>
+</html>
